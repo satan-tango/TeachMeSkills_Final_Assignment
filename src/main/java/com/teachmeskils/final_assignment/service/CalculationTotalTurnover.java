@@ -17,11 +17,11 @@ import java.util.regex.Pattern;
 
 public class CalculationTotalTurnover {
 
-    public void reportCalculationTotalTurnover(Map<String, File[]> data)
+    public void reportCalculationTotalTurnover(Map<String, List<File>> data)
             throws TotalLineNotFoundException, NumberNotFoundException, IOException {
         double totalTurnover = 0;
 
-        for (Map.Entry<String, File[]> documents : data.entrySet()) {
+        for (Map.Entry<String, List<File>> documents : data.entrySet()) {
             totalTurnover = calculateDocumentsTotalTurnover(documents.getValue());
             writeTotalTurnover(documents.getKey(), totalTurnover);
         }
@@ -39,15 +39,15 @@ public class CalculationTotalTurnover {
 
     }
 
-    private double calculateDocumentsTotalTurnover(File[] documents) throws
+    private double calculateDocumentsTotalTurnover(List<File> documents) throws
             NumberNotFoundException, TotalLineNotFoundException {
         List<String> lines;
         double total = 0;
         boolean isFoundedTotalLine;
 
-        for (int i = 0; i < documents.length; i++) {
+        for (int i = 0; i < documents.size(); i++) {
             try {
-                lines = Files.readAllLines(Paths.get(documents[i].getPath()));
+                lines = Files.readAllLines(Paths.get(documents.get(i).getPath()));
                 isFoundedTotalLine = false;
 
                 for (int j = lines.size() - 1; j < 0; j--) {
