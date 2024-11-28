@@ -1,6 +1,6 @@
 package com.teachmeskils.final_assignment.service;
 
-import com.teachmeskils.final_assignment.execption.ContainsNotAllowedSymbolsException;
+import com.teachmeskils.final_assignment.constants.Constants;
 import com.teachmeskils.final_assignment.execption.NumberNotFoundException;
 import com.teachmeskils.final_assignment.execption.TotalLineNotFoundException;
 
@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 public class CalculationTotalTurnover {
 
     public void reportCalculationTotalTurnover(Map<String, File[]> data)
-            throws TotalLineNotFoundException, NumberNotFoundException, ContainsNotAllowedSymbolsException, IOException {
+            throws TotalLineNotFoundException, NumberNotFoundException, IOException {
         double totalTurnover = 0;
 
         for (Map.Entry<String, File[]> documents : data.entrySet()) {
@@ -40,7 +40,7 @@ public class CalculationTotalTurnover {
     }
 
     private double calculateDocumentsTotalTurnover(File[] documents) throws
-            NumberNotFoundException, ContainsNotAllowedSymbolsException, TotalLineNotFoundException {
+            NumberNotFoundException, TotalLineNotFoundException {
         List<String> lines;
         double total = 0;
         boolean isFoundedTotalLine;
@@ -69,17 +69,13 @@ public class CalculationTotalTurnover {
         return total;
     }
 
-    public static double extractTotalFromLine(String line) throws NumberNotFoundException, ContainsNotAllowedSymbolsException {
+    public static double extractTotalFromLine(String line) throws NumberNotFoundException {
         String item;
-        Pattern pattern = Pattern.compile("\\d.*\\d");
+        Pattern pattern = Pattern.compile(Constants.REG_EX_NUMBERS_DOT_COMMA);
         Matcher matcher = pattern.matcher(line);
 
         if (matcher.find()) {
             item = matcher.group();
-
-            if (isContainedNotAllowedSymbols(item)) {
-                throw new ContainsNotAllowedSymbolsException("Contains not allowed symbols", "655j");
-            }
 
             if (item.contains(".") && item.contains(",")) {
                 item = item.replaceAll("\\,", "");
@@ -104,15 +100,4 @@ public class CalculationTotalTurnover {
         }
     }
 
-    private static boolean isContainedNotAllowedSymbols(String line) {
-        char[] chars = line.toCharArray();
-
-        for (int i = 0; i < chars.length; i++) {
-            if (!Character.isDigit(chars[i]) && chars[i] != '.' && chars[i] != ',') {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }
