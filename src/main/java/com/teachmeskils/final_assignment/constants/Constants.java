@@ -2,7 +2,7 @@ package com.teachmeskils.final_assignment.constants;
 
 public interface Constants {
 
-    String REG_EX_NUMBERS_DOT_COMMA = "\\d{1,3}(?:[.,]\\d{3})*(?:[.,]\\d+)?";
+    String REG_EX_NUMBERS_DOT_COMMA = "\\d.*\\d";
 
     String PATH_DOCUMENTS = "src/main/resources/data";
 

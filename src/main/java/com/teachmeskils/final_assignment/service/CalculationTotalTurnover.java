@@ -51,7 +51,7 @@ public class CalculationTotalTurnover {
         List<String> lines;
         double total = 0;
         boolean isFoundedTotalLine;
-
+        System.out.println(documents.size());
 
         for (int i = 0; i < documents.size(); i++) {
             try {
