@@ -21,10 +21,9 @@ public class FileProcessor {
         if (!directory.exists() || !directory.isDirectory()) {
             System.out.println("Указанная директория не существует или это не папка.");
         }
+        Map<String, List<File>> map = new HashMap<>();
         try {
             File[] subDirectories = directory.listFiles();
-            Map<String, List<File>> map = new HashMap<>();
-
             if (subDirectories != null) {
                 for (File subDirectory : subDirectories) {
                     if (subDirectory.isDirectory()) {
@@ -62,11 +61,10 @@ public class FileProcessor {
                     }
                 }
             }
-            return map;
         } catch (Exception e) {
             System.out.println("Произошла ошибка при чтении файлов: " + e.getMessage());
         }
-        return null;
+       return  map;
     }
 
 }
