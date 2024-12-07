@@ -20,6 +20,7 @@ public class FileProcessor {
         File directory = new File(Constants.PATH_DOCUMENTS);
         if (!directory.exists() || !directory.isDirectory()) {
             System.out.println("Указанная директория не существует или это не папка.");
+
         }
         Map<String, List<File>> map = new HashMap<>();
         try {
