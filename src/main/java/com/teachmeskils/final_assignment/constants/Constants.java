@@ -19,4 +19,6 @@ public interface Constants {
     String INVALID_INVOICE_PATH = "src/main/resources/invalid_data/invoices";
 
     String INVALID_ORDERS_PATH = "src/main/resources/invalid_data/orders";
+
+    String PATH_LOG = "logs/log.txt";
 }

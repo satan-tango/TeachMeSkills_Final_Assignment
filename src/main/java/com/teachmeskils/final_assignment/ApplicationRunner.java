@@ -13,7 +13,7 @@ import java.util.Map;
 public class ApplicationRunner {
 
     public static void main(String[] args) throws NumberNotFoundException, TotalLineNotFoundException, IOException {
-        Map<String, List<File>> documents = FileOperation.convertListOfFilesToMap();
+        Map<String, List<File>> documents = FileOperation.fileOperation();
         CalculationTotalTurnover.reportCalculationTotalTurnover(documents);
     }
 }

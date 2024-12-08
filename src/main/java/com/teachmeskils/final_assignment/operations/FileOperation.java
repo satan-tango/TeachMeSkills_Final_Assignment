@@ -1,6 +1,7 @@
 package com.teachmeskils.final_assignment.operations;
 
 import com.teachmeskils.final_assignment.constants.Constants;
+import com.teachmeskils.final_assignment.logger.Logger;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -15,23 +16,28 @@ public class FileOperation {
         try {
             Files.copy(sourcePath, destPath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            System.err.println("Ошибка при перемещении файла: " + e.getMessage());
+            Logger.logException(e);
         }
     }
 
-    public static Map<String, List<File>> convertListOfFilesToMap(){
+    public static Map<String, List<File>> fileOperation(){
+        Logger.logInfo("Работа с папкой начата");
         //File directory = gettingFolderPath();
         File directory = new File(Constants.PATH_DOCUMENTS);
+        Logger.logInfo("Получение папки в работу");
 
         if (!directory.exists() || !directory.isDirectory()) {
             System.out.println("Указанная директория не существует или это не папка.");
         }
+        Logger.logInfo("Получение подпапки в работу");
 
         Map<String, List<File>> map = new HashMap<>();
         List<File> checkList = new ArrayList<>();
         List<File> invoiceList = new ArrayList<>();
         List<File> orderList = new ArrayList<>();
         File[] subDirectories = directory.listFiles();
+        Logger.logInfo("Получение файлов в работу");
+        Logger.logInfo("Работа с файлами начата");
         if (subDirectories != null) {
             for (File subDirectory : subDirectories) {
                 if (subDirectory.isDirectory()) {
@@ -57,15 +63,22 @@ public class FileOperation {
                                 }
                             }
                         }
-                    } else {
+                    }else {
                         System.out.println("В директории нет файлов.");
                     }
                 }
             }
         }
+        Logger.logInfo("Валидные файлы скопированы в папку valid_data");
+        Logger.logInfo("Невалидные файлы скопированы в папку invalid_data");
+        Logger.logInfo("Работа с попдпапкой закончена");
+        Logger.logInfo("Работа с папкой закончена");
         map.put("checks", checkList);
         map.put("invoices", invoiceList);
         map.put("orders", orderList);
+        Logger.logInfo("Валидные файлы занесены в map");
+        Logger.logInfo("Работа с файлами закончена");
+        Logger.logInfo("________________________________");
         return  map;
     }
 }
