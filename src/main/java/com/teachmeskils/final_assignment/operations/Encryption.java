@@ -4,7 +4,7 @@ import java.util.Base64;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class EncryptDecrypt {
+public class Encryption {
 
     public static String encrypt(String input) {
         String encryptedString = Base64.getEncoder().encodeToString(input.getBytes());

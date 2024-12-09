@@ -5,14 +5,14 @@ import java.util.Date;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class TMSApplicationSession {
+public class ApplicationSession {
 
     private String accessToken;
 
     private Date expDate;
 
 
-    public TMSApplicationSession() {
+    public void session() {
         setAccessToken();
         setExpDate();
     }
@@ -33,4 +33,6 @@ public class TMSApplicationSession {
 
         this.expDate = calendar.getTime();
     }
+
+
 }

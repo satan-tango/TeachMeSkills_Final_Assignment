@@ -1,51 +1,35 @@
 package com.teachmeskils.final_assignment.storage;
 
-import com.teachmeskils.final_assignment.operations.EncryptDecrypt;
-import com.teachmeskils.final_assignment.registration.Registration;
+import com.teachmeskils.final_assignment.authentication.AuthenticationAndRegistration;
+import com.teachmeskils.final_assignment.operations.Encryption;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MockStorage {
 
-    /*
-    private String login = "admin";
+    static AuthenticationAndRegistration authentication = new AuthenticationAndRegistration();
 
-    private String password = "admin";
+    List<String> listOfLogins = new ArrayList<>();
+    List<String> listOfPasswords = new ArrayList<>();
 
-    public String getLogin() {
-        return login;
+    public List<String> recordToBaseLogin(){
+        listOfLogins.add(Encryption.encrypt(authentication.regForLogin()));
+
+        return listOfLogins;
     }
 
-    public String getPassword() {
-        return password;
-    }*/
+    public List<String> recordToBasePassword(){
+        listOfPasswords.add(Encryption.encrypt(authentication.regForPassword()));
 
-    Registration registration = new Registration();
-
-    String loginForMock = registration.getLoginForRegistration().toLowerCase();
-    String passwordForMock = registration.registration().toLowerCase();
-
-    private final String login = EncryptDecrypt.encrypt(loginForMock);
-    private final String password = EncryptDecrypt.encrypt(passwordForMock);
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MockStorage that = (MockStorage) o;
-        return Objects.equals(loginForMock, that.loginForMock) && Objects.equals(passwordForMock, that.passwordForMock);
+        return listOfPasswords;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(loginForMock, passwordForMock);
+    public List<String> getListOfLogins() {
+        return listOfLogins;
     }
 
-    public String getLogin() {
-        return EncryptDecrypt.decrypt(login);
-    }
-
-    public String getPassword() {
-        return EncryptDecrypt.decrypt(password);
+    public List<String> getListOfPasswords() {
+        return listOfPasswords;
     }
 }
