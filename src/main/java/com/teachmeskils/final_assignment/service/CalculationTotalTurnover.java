@@ -3,6 +3,7 @@ package com.teachmeskils.final_assignment.service;
 import com.teachmeskils.final_assignment.constants.Constants;
 import com.teachmeskils.final_assignment.execption.NumberNotFoundException;
 import com.teachmeskils.final_assignment.execption.TotalLineNotFoundException;
+import com.teachmeskils.final_assignment.logger.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,10 +26,9 @@ public class CalculationTotalTurnover {
         Files.deleteIfExists(path);
 
         for (Map.Entry<String, List<File>> document : data.entrySet()) {
+            Logger.logInfo("Files type '" + document.getKey() + "' have been taken into processing");
             totalTurnover = calculateDocumentsTotalTurnover(document.getValue());
             writeTotalTurnover(document.getKey(), totalTurnover);
-
-            totalTurnover = 0;
         }
 
         Files.write(
@@ -42,6 +42,7 @@ public class CalculationTotalTurnover {
         Path path = Paths.get(Constants.PATH_REPORT);
         if (!path.toFile().exists()) {
             Files.createFile(path);
+            Logger.logInfo("Report file has been created");
             Files.write(
                     path,
                     ("=========================================ФИНАСОВАЯ СТАТИСТИКА=========================================\n").getBytes(),
@@ -59,6 +60,8 @@ public class CalculationTotalTurnover {
                 path,
                 (documentType.toLowerCase() + " total -> " + String.format("%.3f", total) + "\n").getBytes(),
                 StandardOpenOption.APPEND);
+        Logger.logInfo("The total -> " + String.format("%.3f", total) + " of the files with type '"
+                + documentType + "' has been written into report file");
 
     }
 
@@ -70,7 +73,7 @@ public class CalculationTotalTurnover {
         System.out.println(documents.size());
 
         for (int i = 0; i < documents.size(); i++) {
-            System.out.println(documents.get(i).getName());
+            Logger.logInfo("File with name '" + documents.get(i).getName() + "' has been taken into processing.");
             try {
                 lines = Files.readAllLines(Paths.get(documents.get(i).getPath()));
                 isFoundedTotalLine = false;
@@ -84,11 +87,15 @@ public class CalculationTotalTurnover {
                 }
 
                 if (!isFoundedTotalLine) {
+                    //TODO Перенести файл в невалидные
+                    Logger.logException(new TotalLineNotFoundException("Total line was not found", "733t"));
                     throw new TotalLineNotFoundException("Total line was not found", "733t");
                 }
+                Logger.logInfo("File with name '" + documents.get(i).getName() + "' has been successfully processed.");
             } catch (IOException e) {
-                //TODO логирование: файл не найден
+                Logger.logException(e);
             }
+
         }
 
         return total;
@@ -103,7 +110,8 @@ public class CalculationTotalTurnover {
             item = matcher.group();
 
             if (isContainedNotAllowedSymbols(item)) {
-                throw new NumberNotFoundException("Number was not found", "700n");
+                Logger.logException(new NumberNotFoundException("Number was not found, contains not allowed symbols", "720n"));
+                throw new NumberNotFoundException("Number was not found, contains not allowed symbols", "720n");
             }
 
             if (item.contains(".") && item.contains(",")) {
@@ -116,15 +124,17 @@ public class CalculationTotalTurnover {
 
             try {
                 double value = Double.valueOf(item);
+                Logger.logInfo("Total has been successfully converted into double.");
                 return value;
             } catch (NumberFormatException e) {
                 //TODO Не удалось конвертировать число в double. Скопировать в отдельную папку
+                Logger.logException(new NumberFormatException());
                 throw new NumberFormatException();
-
             }
 
         } else {
             //TODO  Не удалось найти число. Скопировать файл в отдельную папку
+            Logger.logException(new NumberNotFoundException("Number was not found", "700n"));
             throw new NumberNotFoundException("Number was not found", "700n");
         }
     }
