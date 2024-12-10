@@ -88,9 +88,8 @@ public class CalculationTotalTurnover {
         boolean isFoundedTotalLine;
 
         for (int i = 0; i < documents.size(); i++) {
-            System.out.println(documents.get(i).getName());
             Logger.logInfo("File with name '" + documents.get(i).getName() + "' has been taken into processing.");
-            File unsuppDir = new File(Constants.UNSUPPORTED_FILE_PATH);
+            File unsupportedDir= new File(Constants.UNSUPPORTED_FILE_PATH);
             try {
                 lines = Files.readAllLines(Paths.get(documents.get(i).getPath()));
                 isFoundedTotalLine = false;
@@ -107,16 +106,16 @@ public class CalculationTotalTurnover {
                     Logger.logException(new TotalLineNotFoundException("Total line was not found in file with name '"
                             + documents.get(i).getName() + "'", "733t"));
 
-                    if (!unsuppDir.exists()) {
-                        Files.createDirectory(Paths.get(unsuppDir.getAbsolutePath()));
+                    if (!unsupportedDir.exists()) {
+                        Files.createDirectory(Paths.get(unsupportedDir.getAbsolutePath()));
                     }
                     FileOperation.copyFile(Paths.get(documents.get(i).getAbsolutePath()), Paths.get(Constants.UNSUPPORTED_FILE_PATH + File.separator + documents.get(i).getName()));
                     Logger.logInfo("File with name '" + documents.get(i).getName() + "' has been moved into unsupported folder.");
                 }
                 Logger.logInfo("File with name '" + documents.get(i).getName() + "' has been successfully processed.");
             } catch (NumberNotFoundException | NumberFormatException e) {
-                if (!unsuppDir.exists()) {
-                    Files.createDirectory(Paths.get(unsuppDir.getAbsolutePath()));
+                if (!unsupportedDir.exists()) {
+                    Files.createDirectory(Paths.get(unsupportedDir.getAbsolutePath()));
                 }
                 FileOperation.copyFile(Paths.get(documents.get(i).getAbsolutePath()), Paths.get(Constants.UNSUPPORTED_FILE_PATH + File.separator + documents.get(i).getName()));
                 Logger.logInfo("File with name '" + documents.get(i).getName() + "' has been moved into unsupported folder.");

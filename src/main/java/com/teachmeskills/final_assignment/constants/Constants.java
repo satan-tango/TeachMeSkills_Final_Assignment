@@ -1,4 +1,4 @@
-package com.teachmeskils.final_assignment.constants;
+package com.teachmeskills.final_assignment.constants;
 
 public interface Constants {
 
@@ -7,6 +7,8 @@ public interface Constants {
     String PATH_DOCUMENTS = "src/main/resources/data";
 
     String PATH_REPORT = "src/main/resources/Report";
+
+    String UNSUPPORTED_FILE_PATH = "src/main/resources/unsupported_files";
 
     String VALID_CHECK_PATH = "src/main/resources/valid_data/checks";
 
