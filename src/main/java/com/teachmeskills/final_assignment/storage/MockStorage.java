@@ -1,7 +1,7 @@
-package com.teachmeskils.final_assignment.storage;
+package com.teachmeskills.final_assignment.storage;
 
-import com.teachmeskils.final_assignment.authentication.AuthenticationAndRegistration;
-import com.teachmeskils.final_assignment.operations.Encryption;
+import com.teachmeskills.final_assignment.authentication.AuthenticationAndRegistration;
+import com.teachmeskills.final_assignment.operations.Encryption;
 
 import java.util.ArrayList;
 import java.util.List;

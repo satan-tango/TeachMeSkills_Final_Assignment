@@ -1,7 +1,7 @@
-package com.teachmeskils.final_assignment.operations;
+package com.teachmeskills.final_assignment.operations;
 
-import com.teachmeskils.final_assignment.constants.Constants;
-import com.teachmeskils.final_assignment.logger.Logger;
+import com.teachmeskills.final_assignment.logger.Logger;
+import com.teachmeskills.final_assignment.constants.Constants;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -11,14 +11,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 public class FileOperation {
-
-    public static void copyFile(Path sourcePath, Path destPath) {
-        try {
-            Files.copy(sourcePath, destPath, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            Logger.logException(e);
-        }
-    }
 
     public static Map<String, List<File>> fileOperation(){
         Logger.logInfo("Работа с папкой начата");
@@ -80,6 +72,22 @@ public class FileOperation {
         Logger.logInfo("Работа с файлами закончена");
         Logger.logInfo("________________________________");
         return  map;
+    }
+
+    public static void copyFile(Path sourcePath, Path destPath) {
+        try {
+            Files.copy(sourcePath, destPath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            Logger.logException(e);
+        }
+    }
+
+    public static void moveFile(Path sourcePath, Path destPath) {
+        try {
+            Files.move(sourcePath, destPath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            Logger.logException(e);
+        }
     }
 }
 

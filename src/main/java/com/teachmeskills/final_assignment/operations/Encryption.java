@@ -1,4 +1,4 @@
-package com.teachmeskils.final_assignment.operations;
+package com.teachmeskills.final_assignment.operations;
 
 import java.util.Base64;
 import java.util.Random;

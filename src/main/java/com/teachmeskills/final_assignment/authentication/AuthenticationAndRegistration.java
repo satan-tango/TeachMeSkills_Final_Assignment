@@ -1,10 +1,10 @@
-package com.teachmeskils.final_assignment.authentication;
+package com.teachmeskills.final_assignment.authentication;
 
 import com.google.zxing.WriterException;
-import com.teachmeskils.final_assignment.operations.Encryption;
-import com.teachmeskils.final_assignment.operations.QRCode;
-import com.teachmeskils.final_assignment.session.ApplicationSession;
-import com.teachmeskils.final_assignment.storage.MockStorage;
+import com.teachmeskills.final_assignment.operations.QRCode;
+import com.teachmeskills.final_assignment.operations.Encryption;
+import com.teachmeskills.final_assignment.session.ApplicationSession;
+import com.teachmeskills.final_assignment.storage.MockStorage;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -81,17 +81,17 @@ public class AuthenticationAndRegistration {
                     String passwordFromMock = mockStorage.getListOfPasswords().get(j);
 
                     if (authLogin.equals(Encryption.decrypt(loginFromMock)) && authPassword.equals(Encryption.decrypt(passwordFromMock))) {
-//                        String resultOfQRCheck = qrCode.check2FA(secretCode);
-//
-//                        if (resultOfQRCheck.equals("Logged in successfully")) {
-//                            applicationSession.session();
-//
-//                            System.out.println("Auth is successful.");
-//
-//                        } else {
-//                            throw new RuntimeException("Auth failed (Exception in QR validate.");
-//                        }
-                        System.out.println("Success.");
+                        String resultOfQRCheck = qrCode.check2FA(secretCode);
+
+                        if (resultOfQRCheck.equals("Logged in successfully")) {
+                            applicationSession.session();
+
+                            System.out.println("Auth is successful.");
+
+                        } else {
+                            throw new RuntimeException("Auth failed (Exception in QR validate.");
+                        }
+          //              System.out.println("Success.");
                     } else {
                         throw new RuntimeException("Auth failed.");
                     }

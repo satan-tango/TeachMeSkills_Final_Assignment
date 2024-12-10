@@ -1,4 +1,4 @@
-package com.teachmeskils.final_assignment.execption;
+package com.teachmeskills.final_assignment.execption;
 
 public class NumberNotFoundException extends Exception {
 

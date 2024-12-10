@@ -1,4 +1,4 @@
-package com.teachmeskils.final_assignment.session;
+package com.teachmeskills.final_assignment.session;
 
 import java.util.Calendar;
 import java.util.Date;

@@ -1,9 +1,11 @@
-package com.teachmeskils.final_assignment.service;
+package com.teachmeskills.final_assignment.service;
 
-import com.teachmeskils.final_assignment.constants.Constants;
-import com.teachmeskils.final_assignment.execption.NumberNotFoundException;
-import com.teachmeskils.final_assignment.execption.TotalLineNotFoundException;
-import com.teachmeskils.final_assignment.logger.Logger;
+import com.teachmeskills.final_assignment.execption.DataToCalculateTotalTurnoverNotFoundException;
+import com.teachmeskills.final_assignment.execption.NumberNotFoundException;
+import com.teachmeskills.final_assignment.execption.TotalLineNotFoundException;
+import com.teachmeskills.final_assignment.logger.Logger;
+import com.teachmeskills.final_assignment.constants.Constants;
+import com.teachmeskills.final_assignment.operations.FileOperation;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +13,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -20,80 +24,102 @@ import java.util.regex.Pattern;
 public class CalculationTotalTurnover {
 
     public static void reportCalculationTotalTurnover(Map<String, List<File>> data)
-            throws TotalLineNotFoundException, NumberNotFoundException, IOException {
-        double totalTurnover = 0;
+            throws TotalLineNotFoundException, NumberNotFoundException, IOException, DataToCalculateTotalTurnoverNotFoundException {
+        if (data == null || data.isEmpty()) {
+            Logger.logException(
+                    new DataToCalculateTotalTurnoverNotFoundException("There is no data to calculate total turnover", "743d"));
+            throw new DataToCalculateTotalTurnoverNotFoundException("There is no data to calculate total turnover", "743d");
+        }
+
+        double totalTurnover;
         Path path = Paths.get(Constants.PATH_REPORT);
         Files.deleteIfExists(path);
 
         for (Map.Entry<String, List<File>> document : data.entrySet()) {
             Logger.logInfo("Files type '" + document.getKey() + "' have been taken into processing");
             totalTurnover = calculateDocumentsTotalTurnover(document.getValue());
-            writeTotalTurnover(document.getKey(), totalTurnover);
+            writeTotalTurnover(document.getKey(), totalTurnover, document.getValue().size());
         }
-
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        LocalDate date = LocalDate.now();
         Files.write(
                 path,
-                ("\n\n" + new Date()).getBytes(),
+                ("\n\nDate -> " + date.format(formatter)).getBytes(),
                 StandardOpenOption.APPEND);
 
     }
 
-    private static void writeTotalTurnover(String documentType, double total) throws IOException {
+    private static void writeTotalTurnover(String documentType, double total, int documentAmount) throws IOException {
         Path path = Paths.get(Constants.PATH_REPORT);
         if (!path.toFile().exists()) {
             Files.createFile(path);
             Logger.logInfo("Report file has been created");
+            String line = String.format("%-40s |%-40s |%-40s\n", "Тип", "Общая сумма", "Количество файлов");
             Files.write(
                     path,
-                    ("=========================================ФИНАСОВАЯ СТАТИСТИКА=========================================\n").getBytes(),
+                    ("=====================================ФИНАСОВАЯ СТАТИСТИКА=============================================\n\n").getBytes(),
                     StandardOpenOption.APPEND);
             Files.write(
                     path,
-                    ("Тип                                 | Общая сумма                                 | Количество файлов\n").getBytes(),
+                    String.format("%-40s |%-40s |%-40s\n", "Тип", "Общая сумма", "Количество файлов").getBytes(),
                     StandardOpenOption.APPEND);
             Files.write(
                     path,
                     ("------------------------------------------------------------------------------------------------------\n").getBytes(),
                     StandardOpenOption.APPEND);
         }
+        String str = String.format("%-40s |%-40s |%-40s\n", documentType, String.format("%.3f", total), documentAmount);
         Files.write(
                 path,
-                (documentType.toLowerCase() + " total -> " + String.format("%.3f", total) + "\n").getBytes(),
+                str.getBytes(),
+                StandardOpenOption.APPEND);
+        Files.write(
+                path,
+                ("------------------------------------------------------------------------------------------------------\n").getBytes(),
                 StandardOpenOption.APPEND);
         Logger.logInfo("The total -> " + String.format("%.3f", total) + " of the files with type '"
                 + documentType + "' has been written into report file");
 
     }
 
-    private static double calculateDocumentsTotalTurnover(List<File> documents) throws
-            NumberNotFoundException, TotalLineNotFoundException {
+    private static double calculateDocumentsTotalTurnover(List<File> documents) throws IOException {
         List<String> lines;
         double total = 0;
         boolean isFoundedTotalLine;
-        System.out.println(documents.size());
 
         for (int i = 0; i < documents.size(); i++) {
+            System.out.println(documents.get(i).getName());
             Logger.logInfo("File with name '" + documents.get(i).getName() + "' has been taken into processing.");
+            File unsuppDir = new File(Constants.UNSUPPORTED_FILE_PATH);
             try {
                 lines = Files.readAllLines(Paths.get(documents.get(i).getPath()));
                 isFoundedTotalLine = false;
 
                 for (int j = lines.size() - 1; j >= 0; j--) {
                     if (lines.get(j).toLowerCase().contains("total")) {
-                        total += extractTotalFromLine(lines.get(j));
+                        total += extractTotalFromLine(lines.get(j), documents.get(i));
                         isFoundedTotalLine = true;
                         break;
                     }
                 }
 
                 if (!isFoundedTotalLine) {
-                    //TODO Перенести файл в невалидные
-                    Logger.logException(new TotalLineNotFoundException("Total line was not found", "733t"));
-                    throw new TotalLineNotFoundException("Total line was not found", "733t");
+                    Logger.logException(new TotalLineNotFoundException("Total line was not found in file with name '"
+                            + documents.get(i).getName() + "'", "733t"));
+
+                    if (!unsuppDir.exists()) {
+                        Files.createDirectory(Paths.get(unsuppDir.getAbsolutePath()));
+                    }
+                    FileOperation.copyFile(Paths.get(documents.get(i).getAbsolutePath()), Paths.get(Constants.UNSUPPORTED_FILE_PATH + File.separator + documents.get(i).getName()));
+                    Logger.logInfo("File with name '" + documents.get(i).getName() + "' has been moved into unsupported folder.");
                 }
                 Logger.logInfo("File with name '" + documents.get(i).getName() + "' has been successfully processed.");
-            } catch (IOException e) {
-                Logger.logException(e);
+            } catch (NumberNotFoundException | NumberFormatException e) {
+                if (!unsuppDir.exists()) {
+                    Files.createDirectory(Paths.get(unsuppDir.getAbsolutePath()));
+                }
+                FileOperation.copyFile(Paths.get(documents.get(i).getAbsolutePath()), Paths.get(Constants.UNSUPPORTED_FILE_PATH + File.separator + documents.get(i).getName()));
+                Logger.logInfo("File with name '" + documents.get(i).getName() + "' has been moved into unsupported folder.");
             }
 
         }
@@ -101,7 +127,7 @@ public class CalculationTotalTurnover {
         return total;
     }
 
-    private static double extractTotalFromLine(String line) throws NumberNotFoundException {
+    private static double extractTotalFromLine(String line, File file) throws NumberNotFoundException {
         String item;
         Pattern pattern = Pattern.compile(Constants.REG_EX_NUMBERS_DOT_COMMA);
         Matcher matcher = pattern.matcher(line);
@@ -127,14 +153,14 @@ public class CalculationTotalTurnover {
                 Logger.logInfo("Total has been successfully converted into double.");
                 return value;
             } catch (NumberFormatException e) {
-                //TODO Не удалось конвертировать число в double. Скопировать в отдельную папку
                 Logger.logException(new NumberFormatException());
-                throw new NumberFormatException();
+
+                throw new NumberNotFoundException(e.getMessage());
             }
 
         } else {
-            //TODO  Не удалось найти число. Скопировать файл в отдельную папку
             Logger.logException(new NumberNotFoundException("Number was not found", "700n"));
+
             throw new NumberNotFoundException("Number was not found", "700n");
         }
     }

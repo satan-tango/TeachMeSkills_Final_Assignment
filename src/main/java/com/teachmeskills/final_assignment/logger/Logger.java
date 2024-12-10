@@ -1,6 +1,6 @@
-package com.teachmeskils.final_assignment.logger;
+package com.teachmeskills.final_assignment.logger;
 
-import com.teachmeskils.final_assignment.constants.Constants;
+import com.teachmeskills.final_assignment.constants.Constants;
 
 import java.io.IOException;
 import java.nio.file.Files;
