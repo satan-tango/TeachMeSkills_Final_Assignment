@@ -23,9 +23,13 @@ public class AuthenticationAndRegistration {
 
     QRCode qrCode = new QRCode();
 
-    private String secretCode = QRCode.generateSecretKey();
+    private final String secretCode;
 
-    public String regForLogin(){
+    public AuthenticationAndRegistration() {
+        this.secretCode = QRCode.generateSecretKey();
+    }
+
+    public String regForLogin() {
 
         System.out.println("Enter login for registration: ");
 
@@ -34,7 +38,7 @@ public class AuthenticationAndRegistration {
         return login;
     }
 
-    public String regForPassword(){
+    public String regForPassword() {
 
         System.out.println("Enter password for registration: ");
 
@@ -44,8 +48,8 @@ public class AuthenticationAndRegistration {
 
         confirmPassword = scanner.nextLine();
 
-        if (password.equals(confirmPassword)){
-            String barCodeForQR = QRCode.getGoogleAuthenticatorBarCode(secretCode,login, password);
+        if (password.equals(confirmPassword)) {
+            String barCodeForQR = QRCode.getGoogleAuthenticatorBarCode(secretCode, login, password);
 
             try {
                 QRCode.createQRCode(barCodeForQR, "QRCode.png", 400, 400);
@@ -57,12 +61,11 @@ public class AuthenticationAndRegistration {
             }
 
         } else {
-            throw new RuntimeException("Incorrect confirmation password.");
-
+            throw new RuntimeException("Passwords don't match.");
         }
     }
 
-    public void auth(){
+    public void auth() {
 
         System.out.println("Enter login: ");
         String authLogin = scanner.nextLine();
@@ -70,33 +73,37 @@ public class AuthenticationAndRegistration {
         System.out.println("Enter password: ");
         String authPassword = scanner.nextLine();
 
-        for (int i = 0; i < mockStorage.getListOfLogins().size(); i++) {
-            for (int j = 0; j < mockStorage.getListOfPasswords().size(); j++) {
+        if (mockStorage.getListOfLogins() != null && mockStorage.getListOfPasswords() != null) {
+            for (int i = 0; i < mockStorage.getListOfLogins().size(); i++) {
+                for (int j = 0; j < mockStorage.getListOfPasswords().size(); j++) {
 
-                String loginFromMock = mockStorage.getListOfLogins().get(i);
-                String passwordFromMock = mockStorage.getListOfPasswords().get(j);
+                    String loginFromMock = mockStorage.getListOfLogins().get(i);
+                    String passwordFromMock = mockStorage.getListOfPasswords().get(j);
 
-                if (authLogin.equals(Encryption.decrypt(loginFromMock)) && authPassword.equals(Encryption.decrypt(passwordFromMock))){
-                    String resultOfQRCheck = qrCode.check2FA(secretCode);
-
-                    if (resultOfQRCheck.length() > 17){
-                        applicationSession.session();
-
-                        System.out.println("Auth is successful.");
-
+                    if (authLogin.equals(Encryption.decrypt(loginFromMock)) && authPassword.equals(Encryption.decrypt(passwordFromMock))) {
+//                        String resultOfQRCheck = qrCode.check2FA(secretCode);
+//
+//                        if (resultOfQRCheck.equals("Logged in successfully")) {
+//                            applicationSession.session();
+//
+//                            System.out.println("Auth is successful.");
+//
+//                        } else {
+//                            throw new RuntimeException("Auth failed (Exception in QR validate.");
+//                        }
+                        System.out.println("Success.");
                     } else {
                         throw new RuntimeException("Auth failed.");
                     }
-
-                } else {
-                    throw new RuntimeException("Auth failed.");
                 }
             }
-        }
 
+        } else {
+            throw new RuntimeException("Storage is empty.");
+        }
     }
 
-    public void regLoginAndPassword(){
+    public void regLoginAndPassword() {
 
         mockStorage.recordToBaseLogin();
         mockStorage.recordToBasePassword();

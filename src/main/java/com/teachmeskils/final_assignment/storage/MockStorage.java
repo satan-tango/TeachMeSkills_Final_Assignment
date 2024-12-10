@@ -13,16 +13,14 @@ public class MockStorage {
     List<String> listOfLogins = new ArrayList<>();
     List<String> listOfPasswords = new ArrayList<>();
 
-    public List<String> recordToBaseLogin(){
+    public void recordToBaseLogin(){
         listOfLogins.add(Encryption.encrypt(authentication.regForLogin()));
 
-        return listOfLogins;
     }
 
-    public List<String> recordToBasePassword(){
+    public void recordToBasePassword(){
         listOfPasswords.add(Encryption.encrypt(authentication.regForPassword()));
 
-        return listOfPasswords;
     }
 
     public List<String> getListOfLogins() {

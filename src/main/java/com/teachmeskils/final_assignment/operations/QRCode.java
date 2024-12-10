@@ -5,6 +5,7 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import de.taimos.totp.TOTP;
 import org.apache.commons.codec.binary.Base32;
 import org.apache.commons.codec.binary.Hex;
@@ -18,7 +19,7 @@ import java.util.Scanner;
 
 public class QRCode {
 
-    public static String generateSecretKey() { // Генерирует секретный ключ
+    public static String generateSecretKey() {
         SecureRandom random = new SecureRandom();
         byte[] bytes = new byte[20];
         random.nextBytes(bytes);
@@ -39,7 +40,7 @@ public class QRCode {
 
     public static void createQRCode(String barCodeData, String filePath, int height, int width)
             throws WriterException, IOException {
-        BitMatrix matrix = new MultiFormatWriter().encode(barCodeData, BarcodeFormat.QR_CODE, width, height);
+        BitMatrix matrix = new QRCodeWriter().encode(barCodeData, com.google.zxing.BarcodeFormat.QR_CODE, width, height);// Corrected ny GPT
         try (FileOutputStream out = new FileOutputStream(filePath)) {
             MatrixToImageWriter.writeToStream(matrix, "png", out);
         }
@@ -58,7 +59,7 @@ public class QRCode {
         Scanner scanner = new Scanner(System.in);
         String code = scanner.nextLine();
 
-        if (code.equals(QRCode.getTOTPCode(secretKey))) { //Проверка кода на совпадение.
+        if (code.equals(QRCode.getTOTPCode(secretKey))) {
             return "Logged in successfully";
         } else {
             return "Invalid 2FA Code";
