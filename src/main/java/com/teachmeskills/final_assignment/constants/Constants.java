@@ -23,4 +23,9 @@ public interface Constants {
     String INVALID_ORDERS_PATH = "src/main/resources/invalid_data/orders";
 
     String PATH_LOG = "logs/log.txt";
+
+    String LOGIN_VERIFICATION = "^[A-Za-z]([\\.A-Za-z0-9-]{1,18})([A-Za-z0-9])$";
+
+    String PASSWORD_VERIFICATION = "^(?=.*[0-9])(?=.*[A-Z]).+$";
+
 }

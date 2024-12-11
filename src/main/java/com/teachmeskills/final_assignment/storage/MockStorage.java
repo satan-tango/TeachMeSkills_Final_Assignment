@@ -1,33 +1,30 @@
 package com.teachmeskills.final_assignment.storage;
 
-import com.teachmeskills.final_assignment.authentication.AuthenticationAndRegistration;
-import com.teachmeskills.final_assignment.operations.Encryption;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 public class MockStorage {
 
-    static AuthenticationAndRegistration authentication = new AuthenticationAndRegistration();
+    private final String login = "admin";
+    private final String password = "Admin123";
 
-    List<String> listOfLogins = new ArrayList<>();
-    List<String> listOfPasswords = new ArrayList<>();
-
-    public void recordToBaseLogin(){
-        listOfLogins.add(Encryption.encrypt(authentication.regForLogin()));
-
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        MockStorage that = (MockStorage) o;
+        return Objects.equals(login, that.login) && Objects.equals(password, that.password);
     }
 
-    public void recordToBasePassword(){
-        listOfPasswords.add(Encryption.encrypt(authentication.regForPassword()));
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(login, password);
     }
 
-    public List<String> getListOfLogins() {
-        return listOfLogins;
+    public String getLogin() {
+        return login;
     }
 
-    public List<String> getListOfPasswords() {
-        return listOfPasswords;
+    public String getPassword() {
+        return password;
     }
 }

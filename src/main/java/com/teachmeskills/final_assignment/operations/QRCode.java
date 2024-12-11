@@ -51,7 +51,7 @@ public class QRCode {
         return TOTP.getOTP(hexKey);
     }
 
-    public String check2FA(String secretKey){
+    public static String check2FA(String secretKey){
         System.out.print("Please enter 2fA code here -> ");
 
         Scanner scanner = new Scanner(System.in);
