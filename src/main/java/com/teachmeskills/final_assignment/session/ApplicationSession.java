@@ -33,6 +33,4 @@ public class ApplicationSession {
 
         this.expDate = calendar.getTime();
     }
-
-
 }
