@@ -19,7 +19,6 @@ public class Logger {
             Files.write(Paths.get(Constants.PATH_LOG), message.getBytes(), StandardOpenOption.APPEND);
         } catch (IOException e) {
             //do nothing
-
         }
     }
     public static void logException(Exception exception) {
