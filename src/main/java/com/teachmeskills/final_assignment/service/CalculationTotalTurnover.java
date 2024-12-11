@@ -15,16 +15,22 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This service provides the ability to calculate the total in documents.
+ * To work, you need to transfer a map,the key of which will be the type of documents,
+ * and the value of the documents themselves.
+ * The result is saved in a separate report file.
+ * Invalid files are moved to a separate folder.
+ */
 public class CalculationTotalTurnover {
 
     public static void reportCalculationTotalTurnover(Map<String, List<File>> data)
-            throws TotalLineNotFoundException, NumberNotFoundException, IOException, DataToCalculateTotalTurnoverNotFoundException {
+            throws IOException, DataToCalculateTotalTurnoverNotFoundException {
         if (data == null || data.isEmpty()) {
             Logger.logException(
                     new DataToCalculateTotalTurnoverNotFoundException("There is no data to calculate total turnover", "743d"));
@@ -54,7 +60,6 @@ public class CalculationTotalTurnover {
         if (!path.toFile().exists()) {
             Files.createFile(path);
             Logger.logInfo("Report file has been created");
-            String line = String.format("%-40s |%-40s |%-40s\n", "Тип", "Общая сумма", "Количество файлов");
             Files.write(
                     path,
                     ("=====================================ФИНАСОВАЯ СТАТИСТИКА=============================================\n\n").getBytes(),
@@ -89,14 +94,14 @@ public class CalculationTotalTurnover {
 
         for (int i = 0; i < documents.size(); i++) {
             Logger.logInfo("File with name '" + documents.get(i).getName() + "' has been taken into processing.");
-            File unsupportedDir= new File(Constants.UNSUPPORTED_FILE_PATH);
+            File unsupportedDir = new File(Constants.UNSUPPORTED_FILE_PATH);
             try {
                 lines = Files.readAllLines(Paths.get(documents.get(i).getPath()));
                 isFoundedTotalLine = false;
 
                 for (int j = lines.size() - 1; j >= 0; j--) {
                     if (lines.get(j).toLowerCase().contains("total")) {
-                        total += extractTotalFromLine(lines.get(j), documents.get(i));
+                        total += extractTotalFromLine(lines.get(j));
                         isFoundedTotalLine = true;
                         break;
                     }
@@ -126,7 +131,7 @@ public class CalculationTotalTurnover {
         return total;
     }
 
-    private static double extractTotalFromLine(String line, File file) throws NumberNotFoundException {
+    private static double extractTotalFromLine(String line) throws NumberNotFoundException {
         String item;
         Pattern pattern = Pattern.compile(Constants.REG_EX_NUMBERS_DOT_COMMA);
         Matcher matcher = pattern.matcher(line);
@@ -140,7 +145,7 @@ public class CalculationTotalTurnover {
             }
 
             if (item.contains(".") && item.contains(",")) {
-                item = item.replaceAll("\\,", "");
+                item = item.replaceAll(",", "");
             }
 
             if (item.contains(",")) {
