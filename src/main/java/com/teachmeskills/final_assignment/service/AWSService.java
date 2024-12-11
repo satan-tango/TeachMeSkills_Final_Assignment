@@ -1,5 +1,6 @@
 package com.teachmeskills.final_assignment.service;
 
+import com.teachmeskills.final_assignment.logger.Logger;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
@@ -38,5 +39,6 @@ public class AWSService {
                 .build();
 
         PutObjectResponse response = s3Client.putObject(request, Paths.get(filepath.getAbsolutePath()));
+        Logger.logInfo("Report file has been pushed to cloud service.");
     }
 }
