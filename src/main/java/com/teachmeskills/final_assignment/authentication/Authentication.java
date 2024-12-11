@@ -2,6 +2,7 @@ package com.teachmeskills.final_assignment.authentication;
 
 import com.teachmeskills.final_assignment.constants.Constants;
 import com.teachmeskills.final_assignment.logger.Logger;
+import com.teachmeskills.final_assignment.operations.Encryption;
 import com.teachmeskills.final_assignment.operations.QRCodeOperation;
 import com.teachmeskills.final_assignment.session.ApplicationSession;
 import com.teachmeskills.final_assignment.storage.MockStorage;
@@ -32,7 +33,7 @@ public class Authentication {
             if (passwordForAuthentication.matches(Constants.PASSWORD_VERIFICATION)) {
                 Logger.logInfo("Password has been verified");
 
-                if (loginForAuthentication.toLowerCase().equals(mockStorage.getLogin()) && passwordForAuthentication.equals(mockStorage.getPassword())) {
+                if (loginForAuthentication.toLowerCase().equals(Encryption.decrypt(mockStorage.getLogin())) && passwordForAuthentication.equals(Encryption.decrypt(mockStorage.getPassword()))) {
                     Logger.logInfo("Data verification passed");
 
                     if (QRCodeOperation.QrAuth().equals("Success")) {
