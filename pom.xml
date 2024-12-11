@@ -1,50 +1,66 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.teachmeskils.final_assignment</groupId>
-  <artifactId>TeachMeSkills_Final_Assignment</artifactId>
-  <version>1.0.0</version>
-  <packaging>jar</packaging>
+    <groupId>com.teachmeskils.final_assignment</groupId>
+    <artifactId>TeachMeSkills_Final_Assignment</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
 
-  <name>TeachMeSkills_Final_Assignment</name>
-  <url>http://maven.apache.org</url>
+    <name>TeachMeSkills_Final_Assignment</name>
+    <url>http://maven.apache.org</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
 
-    <dependency>
-      <groupId>com.google.zxing</groupId>
-      <artifactId>javase</artifactId>
-      <version>3.4.0</version>
-    </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.4.0</version>
+        </dependency>
 
-    <dependency>
-      <groupId>de.taimos</groupId>
-      <artifactId>totp</artifactId>
-      <version>1.0</version>
-    </dependency>
-  </dependencies>
+        <dependency>
+            <groupId>de.taimos</groupId>
+            <artifactId>totp</artifactId>
+            <version>1.0</version>
+        </dependency>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>8</source>
-          <target>8</target>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+            <version>2.24.9</version>
+        </dependency>
+
+        <!-- для работы с Secret Manager -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>secretsmanager</artifactId>
+            <version>2.29.6</version>
+        </dependency>
+
+
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
