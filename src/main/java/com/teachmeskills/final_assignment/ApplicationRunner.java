@@ -12,8 +12,6 @@ import com.teachmeskills.final_assignment.service.CalculationTotalTurnover;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -27,9 +25,9 @@ public class ApplicationRunner {
         authenticationAndRegistration.auth();*/
         Map<String, List<File>> documents = FileOperation.fileOperation();
         CalculationTotalTurnover.reportCalculationTotalTurnover(documents);
-        File report = new File(Constants.PATH_REPORT);
+        /*File report = new File(Constants.PATH_REPORT);
         if (report.exists()) {
             AWSService.pushDataToAWS(report);
-        }
+        }*/
     }
 }
