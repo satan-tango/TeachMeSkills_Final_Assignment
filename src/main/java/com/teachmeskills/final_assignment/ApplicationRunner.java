@@ -44,7 +44,6 @@ public class ApplicationRunner {
             Logger.logException(e);
         } catch (DataToCalculateTotalTurnoverNotFoundException e) {
             System.out.println("Application has failed.");
-            Logger.logException(e);
         } catch (Exception e) {
             System.out.println("Application has failed.");
             Logger.logException(e);
