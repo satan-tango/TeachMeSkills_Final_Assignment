@@ -19,8 +19,7 @@ public class ApplicationSession {
     }
 
     public boolean isActive() {
-        Date currentTime = new Date();
-        if (currentTime.getTime() > expDate.getTime()) {
+        if (new Date().getTime() > expDate.getTime()) {
             return false;
         } else {
             return true;
@@ -28,10 +27,10 @@ public class ApplicationSession {
     }
 
     private void setAccessToken() {
-        String symbols = "abcdefghijklmnopqrstuvwxyz0123456789";
+        accessToken = "abcdefghijklmnopqrstuvwxyz0123456789";
 
-        this.accessToken = new Random().ints(16, 0, symbols.length())
-                .mapToObj(symbols::charAt)
+        this.accessToken = new Random().ints(16, 0, accessToken.length())
+                .mapToObj(accessToken::charAt)
                 .map(Object::toString)
                 .collect(Collectors.joining());
     }
@@ -41,7 +40,7 @@ public class ApplicationSession {
         String expDate = resourceBundle.getString("auth.expDate");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(Calendar.MINUTE, Integer.valueOf(expDate));
+        calendar.add(Calendar.MINUTE, Integer.parseInt(expDate));
 
         this.expDate = calendar.getTime();
     }

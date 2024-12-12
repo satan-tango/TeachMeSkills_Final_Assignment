@@ -12,22 +12,24 @@ import java.util.*;
 
 public class FileOperation {
 
-/**
- * Performs file operations on documents in the specified directory.
- * This method scans the given directory and its subdirectories for files matching certain criteria.
- * It categorizes the files into three groups: checks, invoices, and orders.
- * Valid files are copied to designated validation paths, while invalid files are moved to corresponding invalid paths.
- * Valid files are listed in Lists appropriately named checks, invoices, and orders.
- * Lists of checks, invoices, and orders are entered into the Map.
- * @return A Map<String, List<File>> containing categorized file lists
- */
-    public static Map<String, List<File>> fileOperation(String filePath){
+    /**
+     * Performs file operations on documents in the specified directory.
+     * This method scans the given directory and its subdirectories for files matching certain criteria.
+     * It categorizes the files into three groups: checks, invoices, and orders.
+     * Valid files are copied to designated validation paths, while invalid files are moved to corresponding invalid paths.
+     * Valid files are listed in Lists appropriately named checks, invoices, and orders.
+     * Lists of checks, invoices, and orders are entered into the Map.
+     *
+     * @return A Map<String, List<File>> containing categorized file lists
+     */
+    public static Map<String, List<File>> fileOperation(String filePath) throws IOException {
         //File directory = gettingFolderPath();
         File directory = new File(filePath);
         Logger.logInfo("Getting folders " + directory.getName() + " at work");
 
         if (!directory.exists() || !directory.isDirectory()) {
             System.out.println("The specified directory does not exist or is not a folder.");
+            throw new IOException();
         }
         Map<String, List<File>> map = new HashMap<>();
         List<File> checkList = new ArrayList<>();
@@ -53,21 +55,22 @@ public class FileOperation {
                                 Logger.logInfo("Working with a file " + file.getName());
                                 orderList.add(file);
                                 copyFile(Paths.get(file.getAbsolutePath()), Paths.get(Constants.VALID_ORDERS_PATH + File.separator + file.getName()));
-                            }else {
+                            } else {
                                 if (subDirectory.getName().toLowerCase().contains("checks")) {
                                     Logger.logInfo("Working with a file " + file.getName());
                                     copyFile(Paths.get(file.getAbsolutePath()), Paths.get(Constants.INVALID_CHECK_PATH + File.separator + file.getName()));
-                                }else if (subDirectory.getName().toLowerCase().contains("invoices")) {
+                                } else if (subDirectory.getName().toLowerCase().contains("invoices")) {
                                     Logger.logInfo("Working with a file " + file.getName());
                                     copyFile(Paths.get(file.getAbsolutePath()), Paths.get(Constants.INVALID_INVOICE_PATH + File.separator + file.getName()));
-                                }else if (subDirectory.getName().toLowerCase().contains("orders")) {
+                                } else if (subDirectory.getName().toLowerCase().contains("orders")) {
                                     Logger.logInfo("Working with a file " + file.getName());
                                     copyFile(Paths.get(file.getAbsolutePath()), Paths.get(Constants.INVALID_ORDERS_PATH + File.separator + file.getName()));
                                 }
                             }
                         }
-                    }else {
+                    } else {
                         System.out.println("There are no files in the directory.");
+                        throw new IOException();
                     }
                 }
             }
@@ -77,7 +80,7 @@ public class FileOperation {
         map.put("orders", orderList);
         Logger.logInfo("Valid files are included in map");
         Logger.logInfo("________________________________");
-        return  map;
+        return map;
     }
 
     public static void copyFile(Path sourcePath, Path destPath) {

@@ -153,7 +153,7 @@ public class CalculationTotalTurnoverService {
             }
 
             try {
-                double value = Double.valueOf(item);
+                double value = Double.parseDouble(item);
                 Logger.logInfo("Total has been successfully converted into double.");
                 return value;
             } catch (NumberFormatException e) {
