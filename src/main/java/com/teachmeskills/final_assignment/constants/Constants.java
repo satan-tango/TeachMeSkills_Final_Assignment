@@ -4,7 +4,6 @@ public interface Constants {
 
     String REG_EX_NUMBERS_DOT_COMMA = "\\d.*\\d";
 
-
     String PATH_REPORT = "src/main/resources/Report";
 
     String UNSUPPORTED_FILE_PATH = "src/main/resources/unsupported_files";
