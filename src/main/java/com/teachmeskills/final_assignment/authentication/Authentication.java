@@ -1,6 +1,7 @@
 package com.teachmeskills.final_assignment.authentication;
 
 import com.teachmeskills.final_assignment.constants.Constants;
+import com.teachmeskills.final_assignment.execption.VerificationFailedException;
 import com.teachmeskills.final_assignment.logger.Logger;
 import com.teachmeskills.final_assignment.operations.Encryption;
 import com.teachmeskills.final_assignment.operations.QRCodeOperation;
@@ -15,14 +16,14 @@ public class Authentication {
 
     MockStorage mockStorage = new MockStorage();
 
-    public void auth() {
+    public ApplicationSession auth() throws VerificationFailedException {
 
-        System.out.println("Enter Login: ");
+        System.out.print("Enter Login: ");
         String loginForAuthentication = scanner.nextLine();
 
         Logger.logInfo("The login was entered");
 
-        System.out.println("Enter password: ");
+        System.out.print("Enter password: ");
         String passwordForAuthentication = scanner.nextLine();
 
         Logger.logInfo("The password was entered");
@@ -43,9 +44,11 @@ public class Authentication {
 
                         ApplicationSession applicationSession = new ApplicationSession();
                         applicationSession.session();
+                        return applicationSession;
                     } else {
+                        Logger.logException(new VerificationFailedException("QR code verification don't passed","dfd"));
                         Logger.logInfo("QR code verification don't passed");
-                        throw new RuntimeException("QR code verification failed.");
+                        throw new VerificationFailedException("QR code verification don't passed","dfd");
                     }
 
                 } else {

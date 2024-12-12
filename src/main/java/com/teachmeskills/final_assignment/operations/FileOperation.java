@@ -21,9 +21,9 @@ public class FileOperation {
  * Lists of checks, invoices, and orders are entered into the Map.
  * @return A Map<String, List<File>> containing categorized file lists
  */
-    public static Map<String, List<File>> fileOperation(){
+    public static Map<String, List<File>> fileOperation(String filePath){
         //File directory = gettingFolderPath();
-        File directory = new File(Constants.PATH_DOCUMENTS);
+        File directory = new File(filePath);
         Logger.logInfo("Getting folders " + directory.getName() + " at work");
 
         if (!directory.exists() || !directory.isDirectory()) {

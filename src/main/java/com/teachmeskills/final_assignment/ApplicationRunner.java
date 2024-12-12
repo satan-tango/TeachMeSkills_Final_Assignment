@@ -1,33 +1,41 @@
 package com.teachmeskills.final_assignment;
 
-//import com.teachmeskills.final_assignment.authentication.AuthenticationAndRegistration;
 
-import com.teachmeskills.final_assignment.constants.Constants;
-import com.teachmeskills.final_assignment.execption.DataToCalculateTotalTurnoverNotFoundException;
-import com.teachmeskills.final_assignment.execption.NumberNotFoundException;
-import com.teachmeskills.final_assignment.execption.TotalLineNotFoundException;
+import com.teachmeskills.final_assignment.authentication.Authentication;
+import com.teachmeskills.final_assignment.execption.VerificationFailedException;
+import com.teachmeskills.final_assignment.logger.Logger;
 import com.teachmeskills.final_assignment.operations.FileOperation;
-import com.teachmeskills.final_assignment.service.AWSService;
-import com.teachmeskills.final_assignment.service.CalculationTotalTurnover;
+import com.teachmeskills.final_assignment.service.CalculationTotalTurnoverService;
+import com.teachmeskills.final_assignment.session.ApplicationSession;
+import com.teachmeskills.final_assignment.user_action.UserAction;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 public class ApplicationRunner {
 
-    public static void main(String[] args) throws NumberNotFoundException, TotalLineNotFoundException, IOException, DataToCalculateTotalTurnoverNotFoundException {
+    public static void main(String[] args) {
 
-   /*     AuthenticationAndRegistration authenticationAndRegistration = new AuthenticationAndRegistration();
-        authenticationAndRegistration.regLoginAndPassword();
+        Authentication authentication = new Authentication();
+        try {
+            ApplicationSession session = authentication.auth();
+            if (session.isActive()) {
+                String filePath = UserAction.getPathToData();
+                Map<String, List<File>> documents = FileOperation.fileOperation(filePath);
+                CalculationTotalTurnoverService.reportCalculationTotalTurnover(documents);
+               /* File report = new File(Constants.PATH_REPORT);
+                if (report.exists()) {
+                    AWSService.pushDataToAWS(report);
+                }*/
+            } else {
+                Logger.logInfo("Session has been expired");
+            }
 
-        authenticationAndRegistration.auth();*/
-        Map<String, List<File>> documents = FileOperation.fileOperation();
-        CalculationTotalTurnover.reportCalculationTotalTurnover(documents);
-        /*File report = new File(Constants.PATH_REPORT);
-        if (report.exists()) {
-            AWSService.pushDataToAWS(report);
-        }*/
+        } catch (VerificationFailedException e) {
+            System.out.println("Authentication has been failed");
+        } catch (Exception e) {
+            Logger.logException(e);
+        }
     }
 }

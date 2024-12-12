@@ -5,7 +5,7 @@ import com.google.zxing.WriterException;
 import java.io.IOException;
 
 public class QRCodeOperation {
-    public static String QrAuth(){
+    public static String QrAuth() {
 
         String secretKey = QRCode.generateSecretKey();
         String email = "teachmeskills@gmail.com";
@@ -18,9 +18,11 @@ public class QRCodeOperation {
             throw new RuntimeException("QR code generation error");
         }
 
-        try{
-            QRCode.check2FA(secretKey);
-            return "Success";
+        try {
+            if (QRCode.check2FA(secretKey)) {
+                return "Success";
+            }
+            return "Unsuccessful";
         } catch (Exception e) {
             throw new RuntimeException("QR code verification error");
         }

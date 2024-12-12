@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  * The result is saved in a separate report file.
  * Invalid files are moved to a separate folder.
  */
-public class CalculationTotalTurnover {
+public class CalculationTotalTurnoverService {
 
     public static void reportCalculationTotalTurnover(Map<String, List<File>> data)
             throws IOException, DataToCalculateTotalTurnoverNotFoundException {

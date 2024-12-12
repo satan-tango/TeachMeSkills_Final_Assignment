@@ -51,16 +51,18 @@ public class QRCode {
         return TOTP.getOTP(hexKey);
     }
 
-    public static String check2FA(String secretKey){
+    public static boolean check2FA(String secretKey) {
         System.out.print("Please enter 2fA code here -> ");
 
         Scanner scanner = new Scanner(System.in);
         String code = scanner.nextLine();
 
         if (code.equals(QRCode.getTOTPCode(secretKey))) {
-            return "Logged in successfully";
+            return true;
         } else {
-            return "Invalid 2FA Code";
+            return false;
         }
+
+
     }
 }
