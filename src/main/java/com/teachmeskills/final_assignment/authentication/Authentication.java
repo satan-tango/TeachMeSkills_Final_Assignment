@@ -10,6 +10,14 @@ import com.teachmeskills.final_assignment.storage.MockStorage;
 
 import java.util.Scanner;
 
+/**
+ * This service is an authorization.
+ * To work, you need to transfer your login and password.
+ * After the transfer, a QR code is generated.
+ * Next, you need to use the application for two-factor authentication and enter the received data.
+ * After successful authorization, a session is created.
+ */
+
 public class Authentication {
 
     Scanner scanner = new Scanner(System.in);
@@ -46,22 +54,21 @@ public class Authentication {
                         applicationSession.session();
                         return applicationSession;
                     } else {
-                        Logger.logException(new VerificationFailedException("QR code verification don't passed","dfd"));
-                        Logger.logInfo("QR code verification don't passed");
-                        throw new VerificationFailedException("QR code verification don't passed","dfd");
+                        Logger.logException(new VerificationFailedException("QR code verification don't passed", "dfd"));
+                        throw new VerificationFailedException("QR code verification don't passed", "482");
                     }
 
                 } else {
-                    Logger.logInfo("Data verification don't passed");
-                    throw new RuntimeException("The data has not been verified.");
+                    Logger.logException(new VerificationFailedException("Data verification don't passed", "dfd"));
+                    throw new VerificationFailedException("The data has not been verified.", "568");
                 }
             } else {
-                Logger.logInfo("Password verification failed");
-                throw new RuntimeException("Password verification failed");
+                Logger.logException(new VerificationFailedException("Password verification failed", "dfd"));
+                throw new VerificationFailedException("Password verification failed", "758");
             }
         } else {
-            Logger.logInfo("Login verification failed");
-            throw new RuntimeException("Login verification failed");
+            Logger.logException(new VerificationFailedException("Login verification failed", "dfd"));
+            throw new VerificationFailedException("Login verification failed", "931");
         }
     }
 }
